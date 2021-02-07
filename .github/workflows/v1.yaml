@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - master
-
-env:
-  DOTNET_VERSION: '5.0.x'
   
 jobs:
   build:
@@ -15,20 +12,14 @@ jobs:
       - name: Check out code 🛎
         uses: actions/checkout@v2
       
-      - name: Setup .NET 5 🔧
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Restore dependencies 🛠
-        run: dotnet restore
-          
+      - name: Setup .NET 4 🔧
+        uses: warrenbuckley/Setup-MSBuild@v1
+        
       - name: Build app 🚀
-        run: dotnet build -c Release --no-restore
+        run:  msbuild WindowsFormsApplication1\WindowsFormsApplication1.sln /p:Configuration=Release /p:DeployOnBuild=true
 
-      - name: Publish app 📰
-        run: dotnet publish -c Release -o ./out
       - name: upload 
         uses: actions/upload-artifact@v2
         with:
           name: my-artifact
-          path: ./out 
+          path: ./bin 
